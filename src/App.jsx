@@ -2,6 +2,7 @@ import React from "react";
 import NoteHeader from "./components/header/NoteHeader";
 import NoteBody from "./components/body/NoteBody";
 import ModalForm from "./components/modal/modal-form/ModalForm";
+import ConfirmModal from "./components/modal/confirm-modal/ConfirmModal";
 import BlockerModal from "./components/modal/BlockerModal";
 import AddButton from "./components/AddButton";
 import { getInitialData } from "./utils/data";
@@ -14,7 +15,10 @@ export default class App extends React.Component {
       data: [],
       showedData: [],
       modalShow: false,
-      addModal: false
+      addModal: false,
+      deleteModal: false,
+      deleteTargetId: "",
+      confirmationMessage: "",
     }
 
     this.toggleAddModal = this.toggleAddModal.bind(this);
@@ -23,6 +27,8 @@ export default class App extends React.Component {
     this.toggleArchivedNoteHandler = this.toggleArchivedNoteHandler.bind(this);
     this.changeFolderHandler = this.changeFolderHandler.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
+    this.showDeleteModal = this.showDeleteModal.bind(this);
+    this.closeDeleteModal = this.closeDeleteModal.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +47,22 @@ export default class App extends React.Component {
     this.setState({
       modalShow: !this.state.modalShow,
       addModal: !this.state.addModal
+    });
+  }
+
+  showDeleteModal(idTarget, titleTarget) {
+    this.setState({
+      modalShow: !this.state.modalShow,
+      deleteModal: !this.state.deleteModal,
+      confirmationMessage: `Anda yakin ingin menghapus "${titleTarget}" ? Catatan yang dihapus akan hilang selamanya !`,
+      deleteTargetId: idTarget
+    });
+  }
+
+  closeDeleteModal() {
+    this.setState({
+      modalShow: !this.state.modalShow,
+      deleteModal: !this.state.deleteModal
     });
   }
 
@@ -97,6 +119,7 @@ export default class App extends React.Component {
       data: updatedData,
       showedData: updatedShowedData
     })
+    this.closeDeleteModal();
   }
 
   toggleArchivedNoteHandler(id) {
@@ -120,9 +143,10 @@ export default class App extends React.Component {
       <div className="flex flex-col min-h-screen justify-between gap-7 bg-thick-white">
         <div className="flex flex-col relative">
           <NoteHeader changeFolderHandler={this.changeFolderHandler} searchHandler={this.searchHandler} />
-          <NoteBody data={this.state.showedData} deleteHandler={this.deleteNoteHandler} archivedNoteHandler={this.toggleArchivedNoteHandler} />
+          <NoteBody data={this.state.showedData} deleteHandler={this.showDeleteModal} archivedNoteHandler={this.toggleArchivedNoteHandler} />
           <BlockerModal show={this.state.modalShow} />
           <ModalForm show={this.state.addModal} closeModalHandler={this.toggleAddModal} dataStateHandler={this.insertNoteHandler} />
+          <ConfirmModal show={this.state.deleteModal} closeModalHandler={this.closeDeleteModal} confirmationMessage={this.state.confirmationMessage} confirmHandler={() => this.deleteNoteHandler(this.state.deleteTargetId)} />
           <AddButton actionHandler={this.toggleAddModal} />
         </div>
         <footer className="flex justify-center items-center p-2">

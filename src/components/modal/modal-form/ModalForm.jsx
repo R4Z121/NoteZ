@@ -54,20 +54,20 @@ export default class ModalForm extends React.Component{
   render() {
     return (
       <div className={`fixed z-50 inset-x-0 inset-y-0 p-5 flex justify-center items-center ${this.props.show ? 'translate-y-0' : '-translate-y-full'} transition-transform`}>
-        <form className="rounded p-5 bg-app-slate w-full max-w-2xl flex flex-col gap-3" onSubmit={this.onFormSubmit}>
-          <h3 className="p-3 flex justify-center items-center text-xl font-bold">Add Note</h3>
+        <form className="rounded border-4 border-app-blue p-5 bg-app-slate w-full max-w-2xl flex flex-col gap-3" onSubmit={this.onFormSubmit}>
+          <h3 className="flex justify-center items-center text-app-blue text-2xl mb-7">Tambah Catatan</h3>
           <div className="flex flex-col gap-2">
             <LabelInput 
-              label="Title" 
+              label="Judul Catatan" 
               id="title" 
               customClass="bg-transparent border-b-2 border-app-blue" 
               value={this.state.titleValue}
               changeHandler={this.onTitleInputChange}
             />
-            <p className={`text-xs font-bold ${(this.state.inputLength > 0) ? 'text-app-blue' : 'text-app-red'} flex justify-end`}>Characters left : {this.state.inputLength}</p>
+            <p className={`text-xs font-bold ${(this.state.inputLength > 0) ? 'text-app-blue' : 'text-app-red'} flex justify-end`}>Sisa karakter : {this.state.inputLength}</p>
           </div>
           <LabelInput 
-            label="Content" 
+            label="Konten" 
             id="content" 
             type="textarea" 
             value={this.state.contentValue} 
