@@ -11,19 +11,30 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       currentSection: "note",
-      data: getInitialData(),
-      showedData: getInitialData().filter(note => !note.archived),
+      data: [],
+      showedData: [],
       modalShow: false,
       addModal: false
     }
 
-    this.updateShowedNote = this.updateShowedNote.bind(this);
     this.toggleAddModal = this.toggleAddModal.bind(this);
     this.insertNoteHandler = this.insertNoteHandler.bind(this);
     this.deleteNoteHandler = this.deleteNoteHandler.bind(this);
     this.toggleArchivedNoteHandler = this.toggleArchivedNoteHandler.bind(this);
     this.changeFolderHandler = this.changeFolderHandler.bind(this);
     this.searchHandler = this.searchHandler.bind(this);
+  }
+
+  componentDidMount() {
+    const notes = JSON.parse(localStorage.getItem('znotes'));
+    if(notes) {
+      this.setState({
+        data: notes,
+        showedData: notes.filter(note => !note.archived)
+      })
+    } else {
+      localStorage.setItem('znotes',JSON.stringify(getInitialData()));
+    }
   }
 
   toggleAddModal() {
@@ -40,8 +51,6 @@ export default class App extends React.Component {
           currentSection: "archive",
           showedData: this.state.data.filter(note => note.archived)
         })
-      }else {
-        console.log("target sama, folder tidak diganti")
       }
     } else if(this.state.currentSection === "archive") {
       if(target === "note") {
@@ -49,9 +58,6 @@ export default class App extends React.Component {
           currentSection: "note",
           showedData: this.state.data.filter(note => !note.archived)
         })
-      }
-      else {
-        console.log("target sama, folder tidak diganti")
       }
     }
   }
@@ -68,46 +74,43 @@ export default class App extends React.Component {
     }
   }
 
-  updateShowedNote() {
-    if(this.state.currentSection === "note") {
-      this.setState({
-        showedData: this.state.data.filter(note => !note.archived)
-      })
-    } else {
-      this.setState({
-        showedData: this.state.data.filter(note => note.archived)
-      })
-    }
-  }
-
   insertNoteHandler(newData) {
+    const updatedNoteData = [...this.state.data,newData];
+    localStorage.setItem('znotes',JSON.stringify(updatedNoteData));
     if(this.state.currentSection === "note") {
       this.setState({
-        data: [...this.state.data,newData],
+        data: updatedNoteData,
         showedData: [...this.state.showedData,newData]
       })
     } else {
       this.setState({
-        data: [...this.state.data,newData],
+        data: updatedNoteData,
       })
     }
   }
 
   deleteNoteHandler(id) {
+    const updatedData = this.state.data.filter(note => (note.id !== id));
+    const updatedShowedData = this.state.showedData.filter(note => (note.id !== id));
+    localStorage.setItem('znotes', JSON.stringify(updatedData));
     this.setState({
-      data: this.state.data.filter(note => (note.id !== id)),
-      showedData: this.state.showedData.filter(note => (note.id !== id))
+      data: updatedData,
+      showedData: updatedShowedData
     })
   }
 
   toggleArchivedNoteHandler(id) {
+    const updatedNoteData = this.state.data.map(note => {
+      if(note.id === id) {
+        note.archived = !note.archived
+      }
+      return note;
+    });
+
+    localStorage.setItem('znotes',JSON.stringify(updatedNoteData));
+    
     this.setState({
-      data: this.state.data.map(note => {
-        if(note.id === id) {
-          note.archived = !note.archived
-        }
-        return note;
-      }),
+      data: updatedNoteData,
       showedData: this.state.showedData.filter(note => (note.id !== id))
     })
   }
