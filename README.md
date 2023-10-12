@@ -23,7 +23,6 @@ Here are steps to install and run this project to your computer locally :
 2. Git
 
    ```
-     npm install git
      git --version
     ```
 ### Installation
