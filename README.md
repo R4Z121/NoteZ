@@ -37,7 +37,7 @@ Here are steps to install and run this project to your computer locally :
     ```
       npm install
     ```
-3. Run project in development mode. App will run on localhost:3000
+3. Run project in development mode. App will run on localhost:5173
 
     ```
       npm run dev
