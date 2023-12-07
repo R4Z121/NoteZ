@@ -1,11 +1,11 @@
 import NoteHeaderNav from "./NoteHeaderNav"
 import SearchBar from "./searchBar"
 
-export default function NoteHeader({changeFolderHandler, searchHandler}) {
+export default function NoteHeader({headerTitle, searchHandler, searchValue}) {
   return (
     <div className="flex flex-col gap-2 relative">
-      <NoteHeaderNav changeFolderHandler={changeFolderHandler} />
-      <SearchBar searchHandler={searchHandler} />
+      <NoteHeaderNav headerTitle={headerTitle} />
+      <SearchBar searchHandler={searchHandler} searchValue={searchValue} />
     </div>
   )
 }
