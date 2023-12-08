@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Archived from "./pages/Archived";
 import Detail from "./pages/Detail";
 import NewNotes from "./pages/NewNotes";
+import NotFound from "./pages/NotFound";
 import { Routes, Route } from "react-router-dom";
 
 export default function App () {
@@ -14,6 +15,7 @@ export default function App () {
           <Route path="/archived" element={<Archived />} />
           <Route path="/detail/:noteId" element={<Detail />} />
           <Route path="/new" element={<NewNotes />} />
+          <Route path="/:any" element={<NotFound />} />
         </Routes>
       </div>
       <footer className="flex justify-center items-center p-2">
