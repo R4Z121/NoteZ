@@ -1,3 +1,5 @@
+import { bool } from "prop-types";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 export default function NoteFolderList ({folderName, folderActive, target}) {
@@ -8,4 +10,10 @@ export default function NoteFolderList ({folderName, folderActive, target}) {
       </Link>
     </div>
   )
+}
+
+NoteFolderList.propTypes = {
+  folderActive: bool.isRequired,
+  target: PropTypes.string.isRequired,
+  folderName: PropTypes.string.isRequired,
 }

@@ -1,11 +1,11 @@
-import NoteHeader from "../components/header/NoteHeader";
-import NoteBody from "../components/body/NoteBody";
-import BlockerModal from "../components/modal/BlockerModal";
-import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
-import AddButton from "../components/AddButton";
-import { getActiveNotes, deleteNote, archiveNote } from "../utils/data";
 import { useEffect, useState } from "react";
+import AddButton from "../components/AddButton";
 import { useSearchParams } from "react-router-dom";
+import NoteBody from "../components/body/NoteBody";
+import NoteHeader from "../components/header/NoteHeader";
+import BlockerModal from "../components/modal/BlockerModal";
+import { getActiveNotes, deleteNote, archiveNote } from "../utils/data";
+import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 
 export default function Home () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,10 +57,25 @@ export default function Home () {
 
   return (
     <>
-      <NoteHeader headerTitle="Catatan" searchHandler={searchNote} searchValue={noteTitleKeyword} />
-      <NoteBody data={activeNotes} deleteHandler={displayDeleteModal} archivedNoteHandler={archiveNoteTarget} />
-      <BlockerModal show={showModal} />
-      <ConfirmModal show={showModal} closeModalHandler={closeModal} confirmHandler={() => onDeleteNote(deleteTargetId)} confirmationMessage={deleteConfirmationMessage}  />
+      <NoteHeader
+        headerTitle="Catatan"
+        searchHandler={searchNote}
+        searchValue={noteTitleKeyword}
+      />
+      <NoteBody 
+        data={activeNotes}
+        deleteHandler={displayDeleteModal}
+        archivedNoteHandler={archiveNoteTarget} 
+      />
+      <BlockerModal
+        show={showModal}
+      />
+      <ConfirmModal
+        show={showModal}
+        closeModalHandler={closeModal}
+        confirmHandler={() => onDeleteNote(deleteTargetId)}
+        confirmationMessage={deleteConfirmationMessage}  
+      />
       <AddButton />
     </>
   );

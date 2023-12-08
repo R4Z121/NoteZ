@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 export default function SearchBar ({searchHandler, searchValue}) {
   return (
     <div className="p-2">
@@ -7,4 +9,9 @@ export default function SearchBar ({searchHandler, searchValue}) {
       </div>
     </div>
   )
+}
+
+SearchBar.propTypes = {
+  searchHandler: PropTypes.func.isRequired,
+  searchValue: PropTypes.string.isRequired,
 }
