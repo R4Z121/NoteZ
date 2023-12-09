@@ -1,5 +1,6 @@
-import { showFormattedDate } from "../../utils/data";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { showFormattedDate } from "../../utils/data";
 
 export default function NoteCardHeader ({info, deleteHandler, archivedNoteHandler}) {
   return (
@@ -22,4 +23,10 @@ export default function NoteCardHeader ({info, deleteHandler, archivedNoteHandle
       <p className="text-xs sm:text-sm">{showFormattedDate(info.createdAt)}</p>
     </div>
   )
+}
+
+NoteCardHeader.propTypes = {
+  info: PropTypes.object.isRequired,
+  deleteHandler: PropTypes.func.isRequired,
+  archivedNoteHandler: PropTypes.func.isRequired
 }

@@ -1,6 +1,8 @@
-import { FaCheck, FaRegBookmark, FaBookmark, FaTrash } from "react-icons/fa";
-import ButtonForm from "../modal/modal-form/ButtonForm";
+import {bool} from "prop-types";
+import PropTypes from "prop-types";
 import { showFormattedDate } from "../../utils/data";
+import ButtonForm from "../modal/modal-form/ButtonForm";
+import { FaCheck, FaRegBookmark, FaBookmark, FaTrash } from "react-icons/fa";
 
 export default function AppForm ({noteInfo, titleChangeHandler, bodyChangeHandler, editNoteHandler, toggleArchiveHandler, deleteModal, updateStatus, addNoteHandler}) {
   return (
@@ -22,7 +24,17 @@ export default function AppForm ({noteInfo, titleChangeHandler, bodyChangeHandle
           <ButtonForm actionHandler={addNoteHandler} content="Simpan Catatan" type="button" customClass="bg-app-blue" />
         </div>
       ) : (<></>)}
-      
     </form>
   )
+}
+
+AppForm.propTypes = {
+  updateStatus: bool,
+  deleteModal: PropTypes.func,
+  addNoteHandler: PropTypes.func,
+  editNoteHandler: PropTypes.func,
+  toggleArchiveHandler: PropTypes.func,
+  noteInfo: PropTypes.object.isRequired,
+  bodyChangeHandler: PropTypes.func.isRequired,
+  titleChangeHandler: PropTypes.func.isRequired,
 }

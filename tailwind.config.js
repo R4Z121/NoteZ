@@ -14,6 +14,9 @@ export default {
         'app-slate': 'rgb(203 213 225)',
         'app-red': 'red',
         'app-yellow': '#FFC000'
+      },
+      minHeight: {
+        '72': '18rem'
       }
     },
   },
