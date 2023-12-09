@@ -2,7 +2,7 @@ import {bool} from "prop-types";
 import PropTypes from "prop-types";
 import { showFormattedDate } from "../../utils/data";
 import ButtonForm from "../modal/modal-form/ButtonForm";
-import { FaCheck, FaRegBookmark, FaBookmark, FaTrash } from "react-icons/fa";
+import ActionPanel from "./ActionPanel";
 
 export default function AppForm ({noteInfo, titleChangeHandler, bodyChangeHandler, editNoteHandler, toggleArchiveHandler, deleteModal, updateStatus, addNoteHandler}) {
   return (
@@ -13,11 +13,7 @@ export default function AppForm ({noteInfo, titleChangeHandler, bodyChangeHandle
       </div>
       <textarea id="noteBody" className="bg-white border-none outline-none p-2 text-sm sm:text-base md:text-lg lg:text-xl resize-none h-72" value={noteInfo.body} onChange={bodyChangeHandler} placeholder="Note Body"></textarea>
       {editNoteHandler ? (
-        <div className="flex bg-app-blue w-full max-w-xl self-center gap-8 justify-center rounded text-xl sm:text-2xl md:text-3xl p-4 mt-16 md:mt-10">
-          <button type="button" title="simpan" className={updateStatus ? "text-green-400" : "text-zinc-500"} onClick={editNoteHandler}><FaCheck /></button>
-          <button type="button" title="arsip" className="text-black" onClick={toggleArchiveHandler}>{noteInfo.archived ? (<FaBookmark />) : (<FaRegBookmark />)}</button>
-          <button type="button" title="hapus" className="text-red-800" onClick={deleteModal}><FaTrash /></button>
-        </div>
+        <ActionPanel archivedStatus={noteInfo.archived} updateStatus={updateStatus} editNoteHandler={editNoteHandler} toggleArchiveHandler={toggleArchiveHandler} deleteModal={deleteModal} />
       ) : (<></>) }
       {addNoteHandler ? (
         <div className="flex p-4 justify-end w-full">
