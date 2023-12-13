@@ -31,7 +31,8 @@ export default function App () {
   },[])
 
   const contextValue = {
-    onLoginSuccess
+    onLoginSuccess,
+    setAuthedUser
   }
 
   return intializing ? (<></>) : (
