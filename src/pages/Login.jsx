@@ -1,5 +1,4 @@
-import { FaUser } from "react-icons/fa";
-import { FaLock } from "react-icons/fa";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import ButtonForm from "../components/modal/modal-form/ButtonForm";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -68,17 +67,17 @@ export default function Login () {
         <div id="form-input" className="flex flex-col gap-5">
           <div id="email-input" className="">
             <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${emailInvalid ? "border-4 border-red-600" : ""}`}>
-              <FaUser />
+              <FaEnvelope />
               <input type="email" id="email" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Email" value={email} onChange={onEmailInput} required />
             </div>
-            {emailInvalid ? (<p className="text-red-600 font-bold">Invalid email</p>) : (<></>)}
+            {emailInvalid ? (<p className="text-red-600 font-bold">Email tidak valid</p>) : (<></>)}
           </div>
           <div id="password-input">
             <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${passwordInvalid ? "border-4 border-red-600" : ""}`}>
               <FaLock />
               <input type="password" id="password" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Password" value={password} onChange={onPasswordInput} required />
             </div>
-            {passwordInvalid ? (<p className="text-red-600 font-bold">Password must have atleast 6 characters length</p>) : (<></>)}
+            {passwordInvalid ? (<p className="text-red-600 font-bold">Password harus memiliki paling sedikit 6 karakter !</p>) : (<></>)}
           </div>
         </div>
         <ButtonForm content="Masuk" type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 text-sm sm:text-lg hover:bg-blue-500" />
