@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -7,11 +7,14 @@ import Detail from "./pages/Detail";
 import NewNotes from "./pages/NewNotes";
 import NotFound from "./pages/NotFound";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { getAccessToken } from "./utils/dataSource";
 
 export const AppContext = createContext(null);
 
 export default function App () {
-  const [authedUser, setAuthedUser] = useState(null);
+  const [authedUser, setAuthedUser] = useState(() => {
+    return getAccessToken() || null
+  });
 
   const contextValue = {
     authedUser,

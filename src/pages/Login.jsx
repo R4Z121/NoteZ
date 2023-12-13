@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { login } from "../utils/dataSource";
 import { AppContext } from "../App";
+import { putAccessToken } from "../utils/dataSource";
 
 export default function Login () {
 
@@ -13,6 +14,7 @@ export default function Login () {
   const [password, setPassword] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
+  const [loginFailedMessage, setLoginFailedMessage] = useState("");
   
   const onEmailInput = e => {
     setEmail(e.target.value);
@@ -29,9 +31,11 @@ export default function Login () {
     if(validateInput(email,password)) {
       const {error,data} = await login({email,password});
       if(!error) {
+        putAccessToken(data.accessToken);
         setAuthedUser(data);
+        setLoginFailedMessage("");
       } else {
-        console.log(error);
+        setLoginFailedMessage(data);
       }
     }
   }
@@ -53,10 +57,15 @@ export default function Login () {
   return (
     <div className="p-3 w-full min-h-screen flex justify-center items-center">
       <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue text-white rounded">
-        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700">
+        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 -mb-8">
           <h1 className="text-blue-700">NoteZ</h1>
         </div>
-        <div id="form-input" className="-mt-4 flex flex-col gap-5">
+        {loginFailedMessage ? (
+          <div className="w-full flex justify-center p-2">
+            <p className="text-red-600 font-bold">{loginFailedMessage} !</p>
+          </div>
+        ) : (<></>)}
+        <div id="form-input" className="flex flex-col gap-5">
           <div id="email-input" className="">
             <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${emailInvalid ? "border-4 border-red-600" : ""}`}>
               <FaUser />

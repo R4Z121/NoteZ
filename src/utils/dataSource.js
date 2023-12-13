@@ -30,7 +30,7 @@ async function login({ email, password }) {
   const responseJson = await response.json();
 
   if (responseJson.status !== 'success') {
-    return { error: true, data: null };
+    return { error: true, data: responseJson.message };
   }
 
   return { error: false, data: responseJson.data };
