@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -7,21 +7,34 @@ import Detail from "./pages/Detail";
 import NewNotes from "./pages/NewNotes";
 import NotFound from "./pages/NotFound";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { getAccessToken } from "./utils/dataSource";
+import { getUserLogged, putAccessToken } from "./utils/dataSource";
 
 export const AppContext = createContext(null);
 
 export default function App () {
-  const [authedUser, setAuthedUser] = useState(() => {
-    return getAccessToken() || null
-  });
+  const [authedUser, setAuthedUser] = useState(null);
+  const [intializing, setInitializing] = useState(true);
 
-  const contextValue = {
-    authedUser,
-    setAuthedUser
+  const onLoginSuccess = async ({ accessToken }) => {
+    putAccessToken(accessToken);
+    const {data} = await getUserLogged();
+    setAuthedUser(data);
   }
 
-  return (
+  useEffect(() => {
+    async function checkIfUserLoggedIn () {
+      const {data} = await getUserLogged();
+      setAuthedUser(data);
+      setInitializing(false);
+    }
+    checkIfUserLoggedIn();
+  },[])
+
+  const contextValue = {
+    onLoginSuccess
+  }
+
+  return intializing ? (<></>) : (
     <AppContext.Provider value={contextValue}>
       <div className="flex flex-col min-h-screen justify-between gap-7 bg-thick-white">
         <div className="flex flex-col relative">

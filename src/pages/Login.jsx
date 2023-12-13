@@ -8,7 +8,7 @@ import { putAccessToken } from "../utils/dataSource";
 
 export default function Login () {
 
-  const {setAuthedUser} = useContext(AppContext);
+  const {onLoginSuccess} = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
@@ -30,8 +30,7 @@ export default function Login () {
     if(validateInput(email,password)) {
       const {error,data} = await login({email,password});
       if(!error) {
-        putAccessToken(data.accessToken);
-        setAuthedUser(data);
+        onLoginSuccess(data);
         setLoginFailedMessage("");
       } else {
         setLoginFailedMessage(data);
