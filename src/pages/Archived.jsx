@@ -2,7 +2,7 @@ import NoteHeader from "../components/header/NoteHeader";
 import NoteBody from "../components/body/NoteBody";
 import BlockerModal from "../components/modal/BlockerModal";
 import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
-import { getArchivedNotes, deleteNote, unarchiveNote } from "../utils/data";
+import { getArchivedNotes, deleteNote, unarchiveNote } from "../utils/dataSource";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -19,8 +19,9 @@ export default function Archived () {
   },[noteTitleKeyword]);
 
   //updateNotesList
-  const updateNotesList = () => {
-    setArchivedNotes(getArchivedNotes().filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
+  const updateNotesList = async () => {
+    const {data} = await getArchivedNotes();
+    setArchivedNotes(data.filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
   }
 
   //showDeleteModalHandler
@@ -36,16 +37,20 @@ export default function Archived () {
   }
 
   //deleteHandler
-  const onDeleteNote = (noteId) => {
-    deleteNote(noteId);
-    updateNotesList();
+  const onDeleteNote = async (noteId) => {
+    const {error} = await deleteNote(noteId);
+    if(!error) {
+      updateNotesList();
+    }
     setShowModal(false);
   }
 
   //unarchiveNoteHandler
-  const unarchiveNoteTarget = (noteId) => {
-    unarchiveNote(noteId);
-    updateNotesList();
+  const unarchiveNoteTarget = async (noteId) => {
+    const {error} = await unarchiveNote(noteId);
+    if(!error) {
+      updateNotesList();
+    }
   }
 
   //searchHandler

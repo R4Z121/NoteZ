@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import NoteBody from "../components/body/NoteBody";
 import NoteHeader from "../components/header/NoteHeader";
 import BlockerModal from "../components/modal/BlockerModal";
-import { getActiveNotes, deleteNote, archiveNote } from "../utils/data";
+import { getActiveNotes, deleteNote, archiveNote } from "../utils/dataSource";
 import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 
 export default function Home () {
@@ -20,8 +20,9 @@ export default function Home () {
   },[noteTitleKeyword]);
 
   //updateNotesList
-  const updateNotesList = () => {
-    setActiveNotes(getActiveNotes().filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
+  const updateNotesList = async () => {
+    const {data} = await getActiveNotes();
+    setActiveNotes(data.filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
   }
 
   //showDeleteModalHandler
@@ -37,16 +38,20 @@ export default function Home () {
   }
 
   //deleteHandler
-  const onDeleteNote = (noteId) => {
-    deleteNote(noteId);
-    updateNotesList();
+  const onDeleteNote = async (noteId) => {
+    const {error} = await deleteNote(noteId);
+    if(!error) {
+      updateNotesList();
+    }
     setShowModal(false);
   }
 
   //archiveNoteHandler
-  const archiveNoteTarget = (noteId) => {
-    archiveNote(noteId);
-    updateNotesList();
+  const archiveNoteTarget = async (noteId) => {
+    const {error} = await archiveNote(noteId);
+    if(!error) {
+      updateNotesList();
+    }
   }
 
   //searchHandler
