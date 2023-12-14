@@ -2,15 +2,21 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import ButtonForm from "../components/modal/modal-form/ButtonForm";
 import { Link } from "react-router-dom";
 import { login } from "../utils/dataSource";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
+import { AppContext } from "../App";
+import { loginLang } from "../utils/content";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function Login ({loginHandler}) {
+  const {lang} = useContext(AppContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [loginFailedMessage, setLoginFailedMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const onEmailInput = e => {
     setEmail(e.target.value);
@@ -25,13 +31,19 @@ export default function Login ({loginHandler}) {
   //handle login
   const onLogin = async () => {
     if(validateInput(email,password)) {
+      setLoading(true);
       const {error,data} = await login({email,password});
       if(!error) {
         loginHandler(data);
         setLoginFailedMessage("");
       } else {
-        setLoginFailedMessage(data);
+        if(data.toLowerCase().includes("email")) {
+          setLoginFailedMessage("emailWrong");
+        } else {
+          setLoginFailedMessage("passwordWrong");
+        }
       }
+      setLoading(false);
     }
   }
 
@@ -57,7 +69,7 @@ export default function Login ({loginHandler}) {
         </div>
         {loginFailedMessage ? (
           <div className="w-full flex justify-center p-2">
-            <p className="text-red-600 font-bold">{loginFailedMessage} !</p>
+            <p className="text-red-600 font-bold">{loginLang[lang][loginFailedMessage]}</p>
           </div>
         ) : (<></>)}
         <div id="form-input" className="flex flex-col gap-5">
@@ -66,23 +78,24 @@ export default function Login ({loginHandler}) {
               <FaEnvelope />
               <input type="email" id="email" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Email" value={email} onChange={onEmailInput} required />
             </div>
-            {emailInvalid ? (<p className="text-red-600 font-bold">Email tidak valid</p>) : (<></>)}
+            {emailInvalid ? (<p className="text-red-600 font-bold">{loginLang[lang].invalidEmailMessage}</p>) : (<></>)}
           </div>
           <div id="password-input">
             <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${passwordInvalid ? "border-4 border-red-600" : ""}`}>
               <FaLock />
               <input type="password" id="password" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Password" value={password} onChange={onPasswordInput} required />
             </div>
-            {passwordInvalid ? (<p className="text-red-600 font-bold">Password harus memiliki paling sedikit 6 karakter !</p>) : (<></>)}
+            {passwordInvalid ? (<p className="text-red-600 font-bold">{loginLang[lang].invalidPasswordMessage}</p>) : (<></>)}
           </div>
         </div>
-        <ButtonForm content="Masuk" type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 dark:bg-app-light-purple text-sm sm:text-lg hover:bg-blue-500" />
+        <ButtonForm content={loginLang[lang].buttonContent} type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 dark:bg-app-light-purple text-sm sm:text-lg hover:bg-blue-500" />
         <div className="flex flex-col gap-3 text-center">
           <hr />
-          <p>Belum punya akun ?</p>
-          <Link to="/register" className="p-2 text-white outline-0 border-none rounded hover:cursor-pointer w-full bg-blue-700 text-sm sm:text-lg hover:bg-blue-600">Daftar</Link>
+          <p>{loginLang[lang].confirmationText}</p>
+          <Link to="/register" className="p-2 text-white outline-0 border-none rounded hover:cursor-pointer w-full bg-blue-700 text-sm sm:text-lg hover:bg-blue-600">{loginLang[lang].linkContent}</Link>
         </div>
       </form>
+      <LoadingModal show={loading} />
     </div>
   )
 }

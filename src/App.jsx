@@ -17,15 +17,17 @@ export default function App () {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("app-theme") === "dark" ?  "dark" : "light";
   });
+  const [lang, setLang] = useState(() => {
+    return localStorage.getItem("app-lang") === "en" ? "en" : "id";
+  })
   const [intializing, setInitializing] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     async function checkIfUserLoggedIn () {
-      if(theme === "dark") {
-        document.documentElement.setAttribute("class",theme);
-      }
+      document.documentElement.setAttribute("class",theme);
+      document.documentElement.setAttribute("lang",lang);
       const {data} = await getUserLogged();
       setAuthedUser(data);
       setInitializing(false);
@@ -34,7 +36,8 @@ export default function App () {
   },[])
 
   const contextValue = {
-    theme
+    theme,
+    lang
   }
 
   const onLoginSuccess = async ({ accessToken }) => {
@@ -45,13 +48,16 @@ export default function App () {
 
   const toggleTheme = () => {
     const newTheme = (theme === "light") ? "dark" : "light";
-    if(newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.remove(theme);
+    document.documentElement.classList.add(newTheme);
     localStorage.setItem("app-theme", newTheme);
     setTheme(newTheme);
+  }
+
+  const toggleLang = () => {
+    const newLang = (lang === "en") ? "id" : "en";
+    localStorage.setItem("app-lang", newLang);
+    setLang(newLang);
   }
 
   const logOut = () => {
@@ -64,7 +70,7 @@ export default function App () {
     <AppContext.Provider value={contextValue}>
       <div className="flex flex-col min-h-screen justify-between gap-7 bg-thick-white dark:bg-app-dark-purple transition-colors">
         <div className="flex flex-col relative">
-          <PageHeader themeHandler={toggleTheme} logoutHandler={logOut} authedUser={authedUser}/>
+          <PageHeader themeHandler={toggleTheme} logoutHandler={logOut} authedUser={authedUser} langHandler = {toggleLang} />
           <Routes>
             <Route path="/login" element={authedUser ? (<Navigate to="/" />) : (<Login loginHandler={onLoginSuccess} />)} />
             <Route path="/register" element={authedUser ? (<Navigate to="/" />) : (<Register />)} />
