@@ -6,6 +6,7 @@ import NoteHeader from "../components/header/NoteHeader";
 import BlockerModal from "../components/modal/BlockerModal";
 import { getActiveNotes, deleteNote, archiveNote } from "../utils/dataSource";
 import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function Home () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,9 +15,11 @@ export default function Home () {
   const [showModal, setShowModal] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(0);
   const [deleteConfirmationMessage, setDeleteConfirmationMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     updateNotesList();
+    setLoading(false);
   },[noteTitleKeyword]);
 
   //updateNotesList
@@ -39,16 +42,20 @@ export default function Home () {
 
   //deleteHandler
   const onDeleteNote = async (noteId) => {
+    setShowModal(false);
+    setLoading(true);
     const {error} = await deleteNote(noteId);
+    setLoading(false);
     if(!error) {
       updateNotesList();
     }
-    setShowModal(false);
   }
 
   //archiveNoteHandler
   const archiveNoteTarget = async (noteId) => {
+    setLoading(true);
     const {error} = await archiveNote(noteId);
+    setLoading(false);
     if(!error) {
       updateNotesList();
     }
@@ -67,11 +74,13 @@ export default function Home () {
         searchHandler={searchNote}
         searchValue={noteTitleKeyword}
       />
-      <NoteBody 
-        data={activeNotes}
-        deleteHandler={displayDeleteModal}
-        archivedNoteHandler={archiveNoteTarget} 
-      />
+      {!loading ? (
+        <NoteBody 
+          data={activeNotes}
+          deleteHandler={displayDeleteModal}
+          archivedNoteHandler={archiveNoteTarget} 
+        />
+      ) : (<LoadingModal show={loading} />)}
       <BlockerModal
         show={showModal}
       />

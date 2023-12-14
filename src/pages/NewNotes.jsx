@@ -2,10 +2,12 @@ import AppForm from "../components/body/AppForm";
 import { addNote } from "../utils/dataSource";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function NewNotes () {
   const navigate = useNavigate();
   const [noteInfo, setNoteInfo] = useState({title: '', body: ''});
+  const [loading, setLoading] = useState(false);
 
   const onTitleChange = e => {
     setNoteInfo((prevState) => {
@@ -21,7 +23,9 @@ export default function NewNotes () {
 
   //add new note handler
   const addNewNote = async () => {
+    setLoading(true);
     const {error} = await addNote(noteInfo);
+    setLoading(false);
     if(!error) {
       navigate('/');
     }
@@ -30,6 +34,7 @@ export default function NewNotes () {
   return (
     <div className="flex flex-col relative" id="add">
       <AppForm noteInfo={noteInfo} titleChangeHandler={onTitleChange} bodyChangeHandler={onBodyChange} addNoteHandler={addNewNote} />
+      <LoadingModal show={loading} />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 import { getArchivedNotes, deleteNote, unarchiveNote } from "../utils/dataSource";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function Archived () {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,9 +14,11 @@ export default function Archived () {
   const [showModal, setShowModal] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState(0);
   const [deleteConfirmationMessage, setDeleteConfirmationMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     updateNotesList();
+    setLoading(false);
   },[noteTitleKeyword]);
 
   //updateNotesList
@@ -38,16 +41,20 @@ export default function Archived () {
 
   //deleteHandler
   const onDeleteNote = async (noteId) => {
+    setShowModal(false);
+    setLoading(true);
     const {error} = await deleteNote(noteId);
+    setLoading(false);
     if(!error) {
       updateNotesList();
     }
-    setShowModal(false);
   }
 
   //unarchiveNoteHandler
   const unarchiveNoteTarget = async (noteId) => {
+    setLoading(true);
     const {error} = await unarchiveNote(noteId);
+    setLoading(false);
     if(!error) {
       updateNotesList();
     }
@@ -61,10 +68,27 @@ export default function Archived () {
 
   return (
     <>
-      <NoteHeader headerTitle="Arsip" searchHandler={searchNote} searchValue={noteTitleKeyword} />
-      <NoteBody data={archivedNotes} deleteHandler={displayDeleteModal} archivedNoteHandler={unarchiveNoteTarget} />
-      <BlockerModal show={showModal} />
-      <ConfirmModal show={showModal} closeModalHandler={closeModal} confirmHandler={() => onDeleteNote(deleteTargetId)} confirmationMessage={deleteConfirmationMessage}  />
+      <NoteHeader 
+        headerTitle="Arsip"
+        searchHandler={searchNote}
+        searchValue={noteTitleKeyword} 
+      />
+      {!loading ? (
+        <NoteBody 
+          data={archivedNotes}
+          deleteHandler={displayDeleteModal}
+          archivedNoteHandler={unarchiveNoteTarget} 
+        />
+      ) : (<LoadingModal show={loading} />)}
+      <BlockerModal 
+        show={showModal} 
+      />
+      <ConfirmModal 
+        show={showModal} 
+        closeModalHandler={closeModal} 
+        confirmHandler={() => onDeleteNote(deleteTargetId)} 
+        confirmationMessage={deleteConfirmationMessage}  
+      />
     </>
   );
 }

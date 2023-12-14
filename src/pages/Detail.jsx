@@ -5,6 +5,7 @@ import { TfiFaceSad } from "react-icons/tfi";
 import { useEffect, useState } from "react";
 import { getNote, archiveNote, unarchiveNote, deleteNote } from "../utils/dataSource";
 import { useNavigate, useParams } from "react-router-dom";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function Detail () {
   const {noteId} = useParams();
@@ -13,6 +14,7 @@ export default function Detail () {
   const [noteInfo, setNoteInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function getNoteInfo () {
@@ -25,6 +27,7 @@ export default function Detail () {
 
   //Toggle archive note handler
   const toggleArchive = async () => {
+    setLoading(true);
     if(noteInfo.archived) {
       const {error} = await unarchiveNote(noteId);
       if(!error) {
@@ -40,6 +43,7 @@ export default function Detail () {
         });
       }
     }
+    setLoading(false);
   }
 
   //show modal delete
@@ -49,13 +53,16 @@ export default function Detail () {
 
   //Delete note handler
   const deleteCurrentNote = async () => {
-    const {error} = deleteNote(noteId);
+    setShowModal(false);
+    setLoading(true);
+    const {error} = await deleteNote(noteId);
+    setLoading(false);
     if(!error) {
       navigate("/");
     }
   }
 
-  return initializing ? (<></>) : (
+  return initializing ? (<LoadingModal show={initializing} />) : (
     <div className="flex flex-col relative" id="detail">
       <BlockerModal show={showModal} />
       <ConfirmModal
@@ -78,6 +85,7 @@ export default function Detail () {
           </div>
         )
       }
+      <LoadingModal show={loading} />
     </div>
   )
 }
