@@ -1,4 +1,3 @@
-import PageHeader from "../components/header/PageHeader";
 import NoteDetail from "../components/body/NoteDetail";
 import BlockerModal from "../components/modal/BlockerModal";
 import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
@@ -65,7 +64,6 @@ export default function Detail () {
         confirmationMessage={`Anda yakin ingin menghapus "${noteInfo.title}" ? Catatan yang dihapus akan hilang selamanya !`}
         closeModalHandler={toggleDeleteModal}
       />
-      <PageHeader />
       {noteInfo ? 
         ( <NoteDetail 
             noteInfo={noteInfo}

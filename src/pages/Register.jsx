@@ -67,10 +67,10 @@ export default function Register () {
   }
 
   return (
-    <div className="p-3 w-full min-h-screen flex justify-center items-center">
-      <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue text-white rounded">
-        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 -mb-8">
-          <h1 className="text-blue-700">NoteZ</h1>
+    <div className="p-3 w-full mt-10 flex justify-center items-center">
+      <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue dark:bg-app-black text-white rounded">
+        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 dark:bg-purple-950 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 dark:border-app-light-blue -mb-8">
+          <h1 className="text-blue-700 dark:text-white">NoteZ</h1>
         </div>
         {registerFailedMessage ? (
           <div className="w-full flex justify-center p-2">
@@ -106,7 +106,7 @@ export default function Register () {
             {passwordConfirmationInvalid ? (<p className="text-red-600 font-bold">Konfirmasi password tidak cocok !</p>) : (<></>)}
           </div>
         </div>
-        <ButtonForm content="Daftar" type="button" actionHandler={onRegister} customClass="w-full bg-blue-400 text-sm sm:text-lg hover:bg-blue-500" />
+        <ButtonForm content="Daftar" type="button" actionHandler={onRegister} customClass="w-full bg-blue-400 text-sm sm:text-lg hover:bg-blue-500 dark:bg-app-light-purple" />
         <div className="flex flex-col gap-3 text-center">
           <hr />
           <p>Sudah punya akun ?</p>

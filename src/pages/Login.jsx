@@ -1,14 +1,11 @@
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import ButtonForm from "../components/modal/modal-form/ButtonForm";
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
 import { login } from "../utils/dataSource";
-import { AppContext } from "../App";
-import { putAccessToken } from "../utils/dataSource";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function Login () {
-
-  const {onLoginSuccess} = useContext(AppContext);
+export default function Login ({loginHandler}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailInvalid, setEmailInvalid] = useState(false);
@@ -30,7 +27,7 @@ export default function Login () {
     if(validateInput(email,password)) {
       const {error,data} = await login({email,password});
       if(!error) {
-        onLoginSuccess(data);
+        loginHandler(data);
         setLoginFailedMessage("");
       } else {
         setLoginFailedMessage(data);
@@ -53,10 +50,10 @@ export default function Login () {
   }
 
   return (
-    <div className="p-3 w-full min-h-screen flex justify-center items-center">
-      <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue text-white rounded">
-        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 -mb-8">
-          <h1 className="text-blue-700">NoteZ</h1>
+    <div className="p-3 w-full mt-10 flex justify-center items-center">
+      <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue dark:bg-app-black text-white rounded">
+        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 dark:bg-purple-950 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 dark:border-app-light-blue -mb-8">
+          <h1 className="text-blue-700 dark:text-white">NoteZ</h1>
         </div>
         {loginFailedMessage ? (
           <div className="w-full flex justify-center p-2">
@@ -79,7 +76,7 @@ export default function Login () {
             {passwordInvalid ? (<p className="text-red-600 font-bold">Password harus memiliki paling sedikit 6 karakter !</p>) : (<></>)}
           </div>
         </div>
-        <ButtonForm content="Masuk" type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 text-sm sm:text-lg hover:bg-blue-500" />
+        <ButtonForm content="Masuk" type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 dark:bg-app-light-purple text-sm sm:text-lg hover:bg-blue-500" />
         <div className="flex flex-col gap-3 text-center">
           <hr />
           <p>Belum punya akun ?</p>
@@ -88,4 +85,8 @@ export default function Login () {
       </form>
     </div>
   )
+}
+
+Login.propTypes = {
+  loginHandler: PropTypes.func.isRequired
 }

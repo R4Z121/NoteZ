@@ -18,7 +18,7 @@ export default function NoteBody ({data, deleteHandler, archivedNoteHandler}) {
     : 
     (
       <div className="flex justify-center items-center p-5">
-        <p className="text-red text-base sm:text-lg mt-12">Tidak Ada Catatan !</p>
+        <p className="text-red text-base sm:text-lg mt-12 dark:text-white">Tidak Ada Catatan !</p>
       </div>
     )
 }

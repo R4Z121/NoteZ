@@ -1,4 +1,3 @@
-import PageHeader from "../components/header/PageHeader";
 import AppForm from "../components/body/AppForm";
 import { addNote } from "../utils/dataSource";
 import { useState } from "react";
@@ -30,7 +29,6 @@ export default function NewNotes () {
 
   return (
     <div className="flex flex-col relative" id="add">
-      <PageHeader />
       <AppForm noteInfo={noteInfo} titleChangeHandler={onTitleChange} bodyChangeHandler={onBodyChange} addNoteHandler={addNewNote} />
     </div>
   )
