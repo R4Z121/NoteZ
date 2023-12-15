@@ -53,6 +53,8 @@ export default function Register () {
       } else {
         if(message.toLowerCase().includes("email")) {
           setRegisterFailedMessage("emailUsed");
+        } else if (message.toLowerCase().includes("name")) {
+          setRegisterFailedMessage("emptyUsername");
         } else {
           setRegisterFailedMessage(message);
         }

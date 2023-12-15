@@ -29,7 +29,8 @@ export const registerLang = {
     linkContent: "Masuk",
     emailUsed: "Email sudah pernah digunakan !",
     passwordConfirmPlaceHolder: "Konfirmasi Password",
-    usernamePlaceholder: "Nama Pengguna"
+    usernamePlaceholder: "Nama Pengguna",
+    emptyUsername: "Nama pengguna tidak boleh kosong !"
   },
   en: {
     invalidEmailMessage: "Invalid Email",
@@ -40,6 +41,7 @@ export const registerLang = {
     linkContent: "Login",
     emailUsed: "Email already used !",
     passwordConfirmPlaceHolder: "Confirm Password",
-    usernamePlaceholder: "Username"
+    usernamePlaceholder: "Username",
+    emptyUsername: "\"Username\" is not allowed to be empty !"
   }
 }
