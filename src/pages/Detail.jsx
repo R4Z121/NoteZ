@@ -1,14 +1,14 @@
+import { useEffect, useState } from "react";
+import { TfiFaceSad } from "react-icons/tfi";
+import { useNavigate, useParams } from "react-router-dom";
 import NoteDetail from "../components/body/NoteDetail";
 import BlockerModal from "../components/modal/BlockerModal";
-import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
-import { TfiFaceSad } from "react-icons/tfi";
-import { useEffect, useState } from "react";
-import { getNote, archiveNote, unarchiveNote, deleteNote } from "../utils/dataSource";
-import { useNavigate, useParams } from "react-router-dom";
 import LoadingModal from "../components/modal/LoadingModal";
+import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
+import { getNote, archiveNote, unarchiveNote, deleteNote } from "../utils/dataSource";
 
 export default function Detail () {
-  const {noteId} = useParams();
+  const { noteId } = useParams();
   const navigate = useNavigate();
 
   const [noteInfo, setNoteInfo] = useState(null);
@@ -18,7 +18,7 @@ export default function Detail () {
 
   useEffect(() => {
     async function getNoteInfo () {
-      const {data} = await getNote(noteId);
+      const { data } = await getNote(noteId);
       setNoteInfo(data);
       setInitializing(false);
     }
@@ -29,17 +29,17 @@ export default function Detail () {
   const toggleArchive = async () => {
     setLoading(true);
     if(noteInfo.archived) {
-      const {error} = await unarchiveNote(noteId);
+      const { error } = await unarchiveNote(noteId);
       if(!error) {
         setNoteInfo((prevState) => {
-          return {...prevState, archived: false}
+          return { ...prevState, archived: false }
         });
       }
     } else {
-      const {error} = await archiveNote(noteId);
+      const { error } = await archiveNote(noteId);
       if(!error) {
         setNoteInfo((prevState) => {
-          return {...prevState, archived: true}
+          return { ...prevState, archived: true }
         });
       }
     }
@@ -55,27 +55,29 @@ export default function Detail () {
   const deleteCurrentNote = async () => {
     setShowModal(false);
     setLoading(true);
-    const {error} = await deleteNote(noteId);
+    const { error } = await deleteNote(noteId);
     setLoading(false);
     if(!error) {
       navigate("/");
     }
   }
 
-  return initializing ? (<LoadingModal show={initializing} />) : (
+  return initializing ? (<LoadingModal show={ initializing } />) : (
     <div className="flex flex-col relative" id="detail">
-      <BlockerModal show={showModal} />
+      <BlockerModal 
+        show={ showModal } 
+      />
       <ConfirmModal
-        show={showModal}
-        confirmHandler={deleteCurrentNote}
-        confirmationMessage={`Anda yakin ingin menghapus "${noteInfo.title}" ? Catatan yang dihapus akan hilang selamanya !`}
-        closeModalHandler={toggleDeleteModal}
+        show={ showModal }
+        confirmHandler={ deleteCurrentNote }
+        confirmationMessage={ `Anda yakin ingin menghapus "${ noteInfo.title }" ? Catatan yang dihapus akan hilang selamanya !` }
+        closeModalHandler={ toggleDeleteModal }
       />
       {noteInfo ? 
         ( <NoteDetail 
-            noteInfo={noteInfo}
-            toggleArchiveHandler={toggleArchive}
-            deleteModal={toggleDeleteModal} 
+            noteInfo={ noteInfo }
+            toggleArchiveHandler={ toggleArchive }
+            deleteModal={ toggleDeleteModal } 
           /> 
         ) 
         : 
@@ -85,7 +87,9 @@ export default function Detail () {
           </div>
         )
       }
-      <LoadingModal show={loading} />
+      <LoadingModal 
+        show={ loading } 
+      />
     </div>
   )
 }

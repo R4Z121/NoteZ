@@ -1,15 +1,15 @@
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { register } from "../utils/dataSource";
+import { useNavigate } from "react-router-dom";
+import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import {AppContext} from "../App";
-import LoadingModal from "../components/modal/LoadingModal";
+import { register } from "../utils/dataSource";
 import { registerLang } from "../utils/content";
 import AppForm from "../components/body/AppForm";
 import InputForm from "../components/body/InputForm";
+import LoadingModal from "../components/modal/LoadingModal";
 
 export default function Register () {
-  const {lang} = useContext(AppContext);
+  const { lang } = useContext(AppContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -44,14 +44,14 @@ export default function Register () {
 
   //handle register
   const onRegister = async () => {
-    if(validateInput(email,password, confirmPassword)) {
+    if (validateInput(email, password, confirmPassword)) {
       setLoading(true);
-      const {error, message} = await register({name: username, email, password});
+      const { error, message } = await register({ name: username, email, password });
       setLoading(false);
-      if(!error) {
+      if (!error) {
         navigate("/login");
       } else {
-        if(message.toLowerCase().includes("email")) {
+        if (message.toLowerCase().includes("email")) {
           setRegisterFailedMessage("emailUsed");
         } else if (message.toLowerCase().includes("name")) {
           setRegisterFailedMessage("emptyUsername");
@@ -66,7 +66,7 @@ export default function Register () {
   const validateInput = (email, password, confirmPassword) => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       if (password.length >= 6) {
-        if(password === confirmPassword) {
+        if (password === confirmPassword) {
           return true;
         } else {
           setPasswordConfirmationInvalid(true);
@@ -84,47 +84,49 @@ export default function Register () {
   return (
     <div className="p-3 w-full mt-10 flex justify-center items-center">
       <AppForm 
-        buttonAction={onRegister}
-        buttonContent={registerLang[lang].buttonContent} 
-        confirmationText={registerLang[lang].confirmationText}
-        failedActionMessage={registerLang[lang][registerFailedMessage] || registerFailedMessage}
-        linkContent={registerLang[lang].linkContent}
+        buttonAction={ onRegister }
+        buttonContent={ registerLang[lang].buttonContent } 
+        confirmationText={ registerLang[lang].confirmationText }
+        failedActionMessage={ registerLang[lang][registerFailedMessage] || registerFailedMessage }
+        linkContent={ registerLang[lang].linkContent }
         linkURL="/login"
       >
         <InputForm 
-          inputHandler={onUsernameInput}
-          inputLogo={<FaUser />}
-          inputPlaceholder={registerLang[lang].usernamePlaceholder}
+          inputHandler={ onUsernameInput}
+          inputLogo={ <FaUser /> }
+          inputPlaceholder={ registerLang[lang].usernamePlaceholder }
           inputType="text"
-          inputValue={username}
+          inputValue={ username }
           invalidMessage=""
         />
         <InputForm 
-          inputHandler={onEmailInput}
-          inputLogo={<FaEnvelope />}
+          inputHandler={ onEmailInput }
+          inputLogo={ <FaEnvelope /> }
           inputPlaceholder="Email"
           inputType="email"
-          inputValue={email}
-          invalidMessage={emailInvalid ? registerLang[lang].invalidEmailMessage : ""}
+          inputValue={ email }
+          invalidMessage={ emailInvalid ? registerLang[lang].invalidEmailMessage : "" }
         />
         <InputForm
-          inputHandler={onPasswordInput}
-          inputLogo={<FaLock />}
+          inputHandler={ onPasswordInput }
+          inputLogo={ <FaLock /> }
           inputPlaceholder="Password"
           inputType="password"
-          inputValue={password}
-          invalidMessage={passwordInvalid ? registerLang[lang].invalidPasswordMessage : ""} 
+          inputValue={ password }
+          invalidMessage={ passwordInvalid ? registerLang[lang].invalidPasswordMessage : "" } 
         />
         <InputForm
-          inputHandler={onConfirmPasswordInput}
-          inputLogo={<FaLock />}
-          inputPlaceholder={registerLang[lang].passwordConfirmPlaceHolder}
+          inputHandler={ onConfirmPasswordInput }
+          inputLogo={ <FaLock /> }
+          inputPlaceholder={ registerLang[lang].passwordConfirmPlaceHolder }
           inputType="password"
-          inputValue={confirmPassword}
-          invalidMessage={passwordConfirmationInvalid ? registerLang[lang].invalidConfirmPasswordMessage : ""} 
+          inputValue={ confirmPassword }
+          invalidMessage={ passwordConfirmationInvalid ? registerLang[lang].invalidConfirmPasswordMessage : "" } 
         />
       </AppForm>
-      <LoadingModal show={loading} />
+      <LoadingModal
+        show={ loading } 
+      />
     </div>
   )
 }

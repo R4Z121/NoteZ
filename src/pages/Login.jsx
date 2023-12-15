@@ -1,15 +1,15 @@
-import { FaEnvelope, FaLock } from "react-icons/fa";
-import { login } from "../utils/dataSource";
 import { useContext, useState } from "react";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import PropTypes from "prop-types";
 import { AppContext } from "../App";
+import { login } from "../utils/dataSource";
 import { loginLang } from "../utils/content";
-import LoadingModal from "../components/modal/LoadingModal";
-import InputForm from "../components/body/InputForm";
 import AppForm from "../components/body/AppForm";
+import InputForm from "../components/body/InputForm";
+import LoadingModal from "../components/modal/LoadingModal";
 
-export default function Login ({loginHandler}) {
-  const {lang} = useContext(AppContext);
+export default function Login ({ loginHandler }) {
+  const { lang } = useContext(AppContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,16 +30,16 @@ export default function Login ({loginHandler}) {
 
   //handle login
   const onLogin = async () => {
-    if(validateInput(email,password)) {
+    if (validateInput(email, password)) {
       setLoading(true);
-      const {error,data} = await login({email,password});
-      if(!error) {
+      const { error, data } = await login({ email, password });
+      if (!error) {
         loginHandler(data);
         setLoginFailedMessage("");
       } else {
-        if(data.toLowerCase().includes("email")) {
+        if (data.toLowerCase().includes("email")) {
           setLoginFailedMessage("emailWrong");
-        } else if(data.toLowerCase().includes("password")){
+        } else if (data.toLowerCase().includes("password")){
           setLoginFailedMessage("passwordWrong");
         } else {
           setLoginFailedMessage(data);
@@ -49,7 +49,7 @@ export default function Login ({loginHandler}) {
   }
 
   //validate email and password handler
-  const validateInput = (email,password) => {
+  const validateInput = (email, password) => {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       if (password.length >= 6) {
         return true;
@@ -65,31 +65,31 @@ export default function Login ({loginHandler}) {
   return (
     <div className="p-3 w-full mt-10 flex justify-center items-center">
       <AppForm 
-        buttonAction={onLogin}
-        buttonContent={loginLang[lang].buttonContent} 
-        confirmationText={loginLang[lang].confirmationText}
-        failedActionMessage={loginLang[lang][loginFailedMessage] || loginFailedMessage}
-        linkContent={loginLang[lang].linkContent}
+        buttonAction={ onLogin }
+        buttonContent={ loginLang[lang].buttonContent } 
+        confirmationText={ loginLang[lang].confirmationText }
+        failedActionMessage={ loginLang[lang][loginFailedMessage] || loginFailedMessage }
+        linkContent={ loginLang[lang].linkContent }
         linkURL="/register"
       >
         <InputForm 
-          inputHandler={onEmailInput}
+          inputHandler={ onEmailInput }
           inputLogo={<FaEnvelope />}
           inputPlaceholder="Email"
           inputType="email"
-          inputValue={email}
-          invalidMessage={emailInvalid ? loginLang[lang].invalidEmailMessage : ""}
+          inputValue={ email }
+          invalidMessage={ emailInvalid ? loginLang[lang].invalidEmailMessage : "" }
         />
         <InputForm
-          inputHandler={onPasswordInput}
-          inputLogo={<FaLock />}
+          inputHandler={ onPasswordInput }
+          inputLogo={ <FaLock /> }
           inputPlaceholder="Password"
           inputType="password"
-          inputValue={password}
-          invalidMessage={passwordInvalid ? loginLang[lang].invalidPasswordMessage : ""} 
+          inputValue={ password }
+          invalidMessage={ passwordInvalid ? loginLang[lang].invalidPasswordMessage : "" } 
         />
       </AppForm>
-      <LoadingModal show={loading} />
+      <LoadingModal show={ loading } />
     </div>
   )
 }

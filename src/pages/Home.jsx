@@ -1,16 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import AddButton from "../components/AddButton";
+import { AppContext } from "../App";
 import { useSearchParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { getActiveNotes, deleteNote, archiveNote } from "../utils/dataSource";
+import AddButton from "../components/AddButton";
 import NoteBody from "../components/body/NoteBody";
 import NoteHeader from "../components/header/NoteHeader";
 import BlockerModal from "../components/modal/BlockerModal";
-import { getActiveNotes, deleteNote, archiveNote } from "../utils/dataSource";
-import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 import LoadingModal from "../components/modal/LoadingModal";
-import { AppContext } from "../App";
+import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 
 export default function Home () {
-  const {lang} = useContext(AppContext);
+  const { lang } = useContext(AppContext);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeNotes, setActiveNotes] = useState([]);
@@ -26,7 +26,7 @@ export default function Home () {
 
   //updateNotesList
   const updateNotesList = async () => {
-    const {data} = await getActiveNotes();
+    const { data } = await getActiveNotes();
     setActiveNotes(data.filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
     setLoading(false);
   }
@@ -34,10 +34,10 @@ export default function Home () {
   //showDeleteModalHandler
   const displayDeleteModal = (noteId, noteTitle) => {
     setDeleteTargetId(noteId);
-    if(lang === "id") {
-      setDeleteConfirmationMessage(`Anda yakin ingin menghapus "${noteTitle}" ? Catatan yang dihapus akan hilang selamanya !`);
+    if (lang === "id") {
+      setDeleteConfirmationMessage(`Anda yakin ingin menghapus "${ noteTitle }" ? Catatan yang dihapus akan hilang selamanya !`);
     } else {
-      setDeleteConfirmationMessage(`Are you sure want to permanently delete "${noteTitle}" ? You cannot undo this action !`);
+      setDeleteConfirmationMessage(`Are you sure want to permanently delete "${ noteTitle }" ? You cannot undo this action !`);
     }
     setShowModal(true);
   }
@@ -51,8 +51,8 @@ export default function Home () {
   const onDeleteNote = async (noteId) => {
     setShowModal(false);
     setLoading(true);
-    const {error} = await deleteNote(noteId);
-    if(!error) {
+    const { error } = await deleteNote(noteId);
+    if (!error) {
       updateNotesList();
     }
   }
@@ -60,8 +60,8 @@ export default function Home () {
   //archiveNoteHandler
   const archiveNoteTarget = async (noteId) => {
     setLoading(true);
-    const {error} = await archiveNote(noteId);
-    if(!error) {
+    const { error } = await archiveNote(noteId);
+    if (!error) {
       updateNotesList();
     }
   }
@@ -69,31 +69,31 @@ export default function Home () {
   //searchHandler
   const searchNote = (e) => {
     setNoteTitleKeyword(e.target.value);
-    setSearchParams({title: e.target.value});
+    setSearchParams({ title: e.target.value });
   }
 
   return (
     <>
       <NoteHeader
         headerTitle="Catatan"
-        searchHandler={searchNote}
-        searchValue={noteTitleKeyword}
+        searchHandler={ searchNote }
+        searchValue={ noteTitleKeyword }
       />
       {!loading ? (
         <NoteBody 
-          data={activeNotes}
-          deleteHandler={displayDeleteModal}
-          archivedNoteHandler={archiveNoteTarget} 
+          data={ activeNotes }
+          deleteHandler={ displayDeleteModal }
+          archivedNoteHandler={ archiveNoteTarget } 
         />
-      ) : (<LoadingModal show={loading} />)}
+      ) : (<LoadingModal show={ loading } />)}
       <BlockerModal
-        show={showModal}
+        show={ showModal }
       />
       <ConfirmModal
-        show={showModal}
-        closeModalHandler={closeModal}
-        confirmHandler={() => onDeleteNote(deleteTargetId)}
-        confirmationMessage={deleteConfirmationMessage}  
+        show={ showModal }
+        closeModalHandler={ closeModal }
+        confirmHandler={ () => onDeleteNote(deleteTargetId) }
+        confirmationMessage={ deleteConfirmationMessage }  
       />
       <AddButton />
     </>
