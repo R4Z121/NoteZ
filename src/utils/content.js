@@ -27,7 +27,9 @@ export const registerLang = {
     buttonContent: "Daftar",
     confirmationText: "Sudah punya akun ?",
     linkContent: "Masuk",
-    emailUsed: "Email sudah pernah digunakan !"
+    emailUsed: "Email sudah pernah digunakan !",
+    passwordConfirmPlaceHolder: "Konfirmasi Password",
+    usernamePlaceholder: "Nama Pengguna"
   },
   en: {
     invalidEmailMessage: "Invalid Email",
@@ -36,6 +38,8 @@ export const registerLang = {
     buttonContent: "Register",
     confirmationText: "Already have an account ?",
     linkContent: "Login",
-    emailUsed: "Email already used !"
+    emailUsed: "Email already used !",
+    passwordConfirmPlaceHolder: "Confirm Password",
+    usernamePlaceholder: "Username"
   }
 }

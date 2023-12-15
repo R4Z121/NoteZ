@@ -1,4 +1,4 @@
-import AppForm from "../components/body/AppForm";
+import NoteForm from "../components/body/NoteForm";
 import { addNote } from "../utils/dataSource";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ export default function NewNotes () {
 
   return (
     <div className="flex flex-col relative" id="add">
-      <AppForm noteInfo={noteInfo} titleChangeHandler={onTitleChange} bodyChangeHandler={onBodyChange} addNoteHandler={addNewNote} />
+      <NoteForm noteInfo={noteInfo} titleChangeHandler={onTitleChange} bodyChangeHandler={onBodyChange} addNoteHandler={addNewNote} />
       <LoadingModal show={loading} />
     </div>
   )

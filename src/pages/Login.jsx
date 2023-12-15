@@ -1,12 +1,12 @@
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import ButtonForm from "../components/modal/modal-form/ButtonForm";
-import { Link } from "react-router-dom";
 import { login } from "../utils/dataSource";
 import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import { AppContext } from "../App";
 import { loginLang } from "../utils/content";
 import LoadingModal from "../components/modal/LoadingModal";
+import InputForm from "../components/body/InputForm";
+import AppForm from "../components/body/AppForm";
 
 export default function Login ({loginHandler}) {
   const {lang} = useContext(AppContext);
@@ -45,7 +45,6 @@ export default function Login ({loginHandler}) {
           setLoginFailedMessage(data);
         }
       }
-      setLoading(false);
     }
   }
 
@@ -65,38 +64,31 @@ export default function Login ({loginHandler}) {
 
   return (
     <div className="p-3 w-full mt-10 flex justify-center items-center">
-      <form className="w-full max-w-md flex flex-col gap-4 p-4 bg-app-blue dark:bg-app-black text-white rounded">
-        <div id="form-header" className="w-full self-center relative -top-10 bg-blue-300 dark:bg-purple-950 p-3 flex justify-center items-center font-bold text-lg sm:text-2xl border-4 border-blue-700 dark:border-app-light-blue -mb-8">
-          <h1 className="text-blue-700 dark:text-white">NoteZ</h1>
-        </div>
-        {loginFailedMessage ? (
-          <div className="w-full flex justify-center p-2">
-            <p className="text-red-600 font-bold">{loginLang[lang][loginFailedMessage] || loginFailedMessage}</p>
-          </div>
-        ) : (<></>)}
-        <div id="form-input" className="flex flex-col gap-5">
-          <div id="email-input" className="">
-            <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${emailInvalid ? "border-4 border-red-600" : ""}`}>
-              <FaEnvelope />
-              <input type="email" id="email" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Email" value={email} onChange={onEmailInput} required />
-            </div>
-            {emailInvalid ? (<p className="text-red-600 font-bold">{loginLang[lang].invalidEmailMessage}</p>) : (<></>)}
-          </div>
-          <div id="password-input">
-            <div className={`flex items-center gap-2 bg-white p-2 text-black rounded-sm text-sm sm:text-lg ${passwordInvalid ? "border-4 border-red-600" : ""}`}>
-              <FaLock />
-              <input type="password" id="password" className="p-1 w-full outline-none border-none bg-transparent" placeholder="Password" value={password} onChange={onPasswordInput} required />
-            </div>
-            {passwordInvalid ? (<p className="text-red-600 font-bold">{loginLang[lang].invalidPasswordMessage}</p>) : (<></>)}
-          </div>
-        </div>
-        <ButtonForm content={loginLang[lang].buttonContent} type="button" actionHandler={onLogin} customClass="w-full bg-blue-400 dark:bg-app-light-purple text-sm sm:text-lg hover:bg-blue-500" />
-        <div className="flex flex-col gap-3 text-center">
-          <hr />
-          <p>{loginLang[lang].confirmationText}</p>
-          <Link to="/register" className="p-2 text-white outline-0 border-none rounded hover:cursor-pointer w-full bg-blue-700 text-sm sm:text-lg hover:bg-blue-600">{loginLang[lang].linkContent}</Link>
-        </div>
-      </form>
+      <AppForm 
+        buttonAction={onLogin}
+        buttonContent={loginLang[lang].buttonContent} 
+        confirmationText={loginLang[lang].confirmationText}
+        failedActionMessage={loginLang[lang][loginFailedMessage] || loginFailedMessage}
+        linkContent={loginLang[lang].linkContent}
+        linkURL="/register"
+      >
+        <InputForm 
+          inputHandler={onEmailInput}
+          inputLogo={<FaEnvelope />}
+          inputPlaceholder="Email"
+          inputType="email"
+          inputValue={email}
+          invalidMessage={emailInvalid ? loginLang[lang].invalidEmailMessage : ""}
+        />
+        <InputForm
+          inputHandler={onPasswordInput}
+          inputLogo={<FaLock />}
+          inputPlaceholder="Password"
+          inputType="password"
+          inputValue={password}
+          invalidMessage={passwordInvalid ? loginLang[lang].invalidPasswordMessage : ""} 
+        />
+      </AppForm>
       <LoadingModal show={loading} />
     </div>
   )

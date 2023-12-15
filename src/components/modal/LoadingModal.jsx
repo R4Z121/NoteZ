@@ -10,7 +10,7 @@ export default function LoadingModal ({show}) {
     <>
       <BlockerModal show={show} />
       <div className={`fixed inset-x-0 inset-y-0 z-50 flex justify-center items-center ${show ? '' : 'hidden'}`}>
-        <p className="text-2xl dark:text-white">{lang === "id" ? "Memuat..." : "Loading..."}</p>
+        <p className="text-2xl text-white">{lang === "id" ? "Memuat..." : "Loading..."}</p>
       </div>
     </>
   )
