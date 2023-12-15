@@ -2,8 +2,12 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { showFormattedDate } from "../../utils/data";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { AppContext } from "../../App";
+import { useContext } from "react";
 
 export default function NoteCardHeader ({info, deleteHandler, archivedNoteHandler}) {
+  const {lang} = useContext(AppContext);
+
   return (
     <div id="card-header" className="p-3">
       <div className="flex justify-between items-center gap-2">
@@ -17,7 +21,7 @@ export default function NoteCardHeader ({info, deleteHandler, archivedNoteHandle
           </button>
         </div>
       </div>
-      <p className="text-xs sm:text-sm">{showFormattedDate(info.createdAt)}</p>
+      <p className="text-xs sm:text-sm">{showFormattedDate(info.createdAt,lang)}</p>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AddButton from "../components/AddButton";
 import { useSearchParams } from "react-router-dom";
 import NoteBody from "../components/body/NoteBody";
@@ -7,8 +7,11 @@ import BlockerModal from "../components/modal/BlockerModal";
 import { getActiveNotes, deleteNote, archiveNote } from "../utils/dataSource";
 import ConfirmModal from "../components/modal/confirm-modal/ConfirmModal";
 import LoadingModal from "../components/modal/LoadingModal";
+import { AppContext } from "../App";
 
 export default function Home () {
+  const {lang} = useContext(AppContext);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeNotes, setActiveNotes] = useState([]);
   const [noteTitleKeyword, setNoteTitleKeyword] = useState(searchParams.get('title') || "");
@@ -19,19 +22,23 @@ export default function Home () {
 
   useEffect(() => {
     updateNotesList();
-    setLoading(false);
   },[noteTitleKeyword]);
 
   //updateNotesList
   const updateNotesList = async () => {
     const {data} = await getActiveNotes();
     setActiveNotes(data.filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
+    setLoading(false);
   }
 
   //showDeleteModalHandler
   const displayDeleteModal = (noteId, noteTitle) => {
     setDeleteTargetId(noteId);
-    setDeleteConfirmationMessage(`Anda yakin ingin menghapus "${noteTitle}" ? Catatan yang dihapus akan hilang selamanya !`);
+    if(lang === "id") {
+      setDeleteConfirmationMessage(`Anda yakin ingin menghapus "${noteTitle}" ? Catatan yang dihapus akan hilang selamanya !`);
+    } else {
+      setDeleteConfirmationMessage(`Are you sure want to permanently delete "${noteTitle}" ? You cannot undo this action !`);
+    }
     setShowModal(true);
   }
 
@@ -45,7 +52,6 @@ export default function Home () {
     setShowModal(false);
     setLoading(true);
     const {error} = await deleteNote(noteId);
-    setLoading(false);
     if(!error) {
       updateNotesList();
     }
@@ -55,7 +61,6 @@ export default function Home () {
   const archiveNoteTarget = async (noteId) => {
     setLoading(true);
     const {error} = await archiveNote(noteId);
-    setLoading(false);
     if(!error) {
       updateNotesList();
     }

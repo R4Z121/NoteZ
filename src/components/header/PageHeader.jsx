@@ -19,7 +19,7 @@ export default function PageHeader({themeHandler, logoutHandler, authedUser, lan
             <p className="w-full text-right text-sm sm:text-lg">{lang === "id" ? `Halo, ${authedUser.name} !` : `Welcome, ${authedUser.name} !` }</p>
             <div className="flex items-center justify-end gap-2 sm:gap-4 text-xl sm:text-2xl">
               <Link to='/' title={lang === "id" ? "Halaman Utama" : "Home"}><MdHome /></Link>
-              <Link to='/archived' title="Arsip"><MdArchive /></Link>
+              <Link to='/archived' title={lang === "id" ? "Arsip" : "Archive"}><MdArchive /></Link>
               <a onClick={themeHandler} className="hover:cursor-pointer" title={lang === "id" ? "Ubah Tema" : "Toggle Theme"}>{theme === "dark" ? (<MdSunny />) : (<MdModeNight />)}</a>
               <a onClick={langHandler} className="hover:cursor-pointer" title={lang === "id" ? "Ubah Bahasa" : "Toggle Language"}><MdGTranslate /></a>
               <a onClick={logoutHandler} className="hover:cursor-pointer" title={lang === "id" ? "Keluar" : "Logout"} ><MdLogout /></a>

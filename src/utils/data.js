@@ -104,14 +104,15 @@ function editNote(id, title, body) {
   });
 }
 
-function showFormattedDate(date) {
+function showFormattedDate(date, lang) {
   const options = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric"
   }
-  return new Date(date).toLocaleDateString("id-ID", options)
+  const locale = lang === "id" ? "id-ID" : "en-US";
+  return new Date(date).toLocaleDateString(locale, options)
 }
 
 export {

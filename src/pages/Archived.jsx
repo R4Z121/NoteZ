@@ -18,13 +18,13 @@ export default function Archived () {
 
   useEffect(() => {
     updateNotesList();
-    setLoading(false);
   },[noteTitleKeyword]);
 
   //updateNotesList
   const updateNotesList = async () => {
     const {data} = await getArchivedNotes();
     setArchivedNotes(data.filter(note => note.title.toLowerCase().includes(noteTitleKeyword.toLowerCase())));
+    setLoading(false);
   }
 
   //showDeleteModalHandler
@@ -44,7 +44,6 @@ export default function Archived () {
     setShowModal(false);
     setLoading(true);
     const {error} = await deleteNote(noteId);
-    setLoading(false);
     if(!error) {
       updateNotesList();
     }
@@ -54,7 +53,6 @@ export default function Archived () {
   const unarchiveNoteTarget = async (noteId) => {
     setLoading(true);
     const {error} = await unarchiveNote(noteId);
-    setLoading(false);
     if(!error) {
       updateNotesList();
     }
@@ -69,7 +67,6 @@ export default function Archived () {
   return (
     <>
       <NoteHeader 
-        headerTitle="Arsip"
         searchHandler={searchNote}
         searchValue={noteTitleKeyword} 
       />

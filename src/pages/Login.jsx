@@ -39,8 +39,10 @@ export default function Login ({loginHandler}) {
       } else {
         if(data.toLowerCase().includes("email")) {
           setLoginFailedMessage("emailWrong");
-        } else {
+        } else if(data.toLowerCase().includes("password")){
           setLoginFailedMessage("passwordWrong");
+        } else {
+          setLoginFailedMessage(data);
         }
       }
       setLoading(false);
@@ -69,7 +71,7 @@ export default function Login ({loginHandler}) {
         </div>
         {loginFailedMessage ? (
           <div className="w-full flex justify-center p-2">
-            <p className="text-red-600 font-bold">{loginLang[lang][loginFailedMessage]}</p>
+            <p className="text-red-600 font-bold">{loginLang[lang][loginFailedMessage] || loginFailedMessage}</p>
           </div>
         ) : (<></>)}
         <div id="form-input" className="flex flex-col gap-5">

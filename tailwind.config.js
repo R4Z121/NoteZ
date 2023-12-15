@@ -23,6 +23,9 @@ export default {
       },
       minHeight: {
         '72': '18rem'
+      },
+      minWidth: {
+        '16' : '4rem'
       }
     },
   },
