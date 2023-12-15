@@ -64,24 +64,26 @@ export default function Detail () {
 
   return initializing ? (<LoadingModal show={ initializing } />) : (
     <div className="flex flex-col relative" id="detail">
-      <BlockerModal 
-        show={ showModal } 
-      />
-      <ConfirmModal
-        show={ showModal }
-        confirmHandler={ deleteCurrentNote }
-        confirmationMessage={ `Anda yakin ingin menghapus "${ noteInfo.title }" ? Catatan yang dihapus akan hilang selamanya !` }
-        closeModalHandler={ toggleDeleteModal }
-      />
       {noteInfo ? 
-        ( <NoteDetail 
-            noteInfo={ noteInfo }
-            toggleArchiveHandler={ toggleArchive }
-            deleteModal={ toggleDeleteModal } 
-          /> 
+        ( <>
+            <BlockerModal 
+            show={ showModal } 
+            />
+            <ConfirmModal
+              show={ showModal }
+              confirmHandler={ deleteCurrentNote }
+              confirmationMessage={ `Anda yakin ingin menghapus "${ noteInfo.title }" ? Catatan yang dihapus akan hilang selamanya !` }
+              closeModalHandler={ toggleDeleteModal }
+            />
+            <NoteDetail 
+              noteInfo={ noteInfo }
+              toggleArchiveHandler={ toggleArchive }
+              deleteModal={ toggleDeleteModal } 
+            /> 
+          </>
         ) 
         : 
-        ( <div className="flex flex-col gap-4 items-center p-5 mt-16">
+        ( <div className="flex flex-col gap-4 items-center p-5 mt-16 dark:text-white">
             <TfiFaceSad className="text-5xl" />
             <p>Catatan Tidak Ditemukan !</p>
           </div>

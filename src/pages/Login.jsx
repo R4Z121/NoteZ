@@ -33,6 +33,7 @@ export default function Login ({ loginHandler }) {
     if (validateInput(email, password)) {
       setLoading(true);
       const { error, data } = await login({ email, password });
+      setLoading(false);
       if (!error) {
         loginHandler(data);
         setLoginFailedMessage("");
