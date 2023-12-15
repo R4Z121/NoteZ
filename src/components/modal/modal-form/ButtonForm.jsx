@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 
-export default function ButtonForm ({type, actionHandler, content, customClass}) {
+export default function ButtonForm ({ type, actionHandler, content, customClass }) {
   return (
-    <button className={`p-2 min-w-16 text-white outline-0 border-none rounded hover:cursor-pointer ${customClass}`} type={type} onClick={actionHandler}>{content}</button>
+    <button className={ `p-2 min-w-16 text-white outline-0 border-none rounded hover:cursor-pointer ${customClass}` } type={ type } onClick={ actionHandler }>{ content }</button>
   )
 }
 

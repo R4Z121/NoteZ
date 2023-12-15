@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar";
 
-export default function NoteHeader({searchHandler, searchValue}) {
+export default function NoteHeader({ searchHandler, searchValue }) {
   return (
     <div className="flex flex-col gap-2 relative">
       <SearchBar 
-        searchHandler={searchHandler} 
-        searchValue={searchValue} 
+        searchHandler={ searchHandler } 
+        searchValue={ searchValue } 
       />
     </div>
   )
