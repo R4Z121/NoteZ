@@ -1,5 +1,5 @@
 # RZ-NOTE
-A simple web app to keep note locally. This web built as my submission assignment on class "Belajar Membuat Aplikasi Web dengan React" in [Dicoding Academy](https://www.dicoding.com/)
+A Single Page Application web to keep user's notes. This web built as my submission assignment on class "Belajar Fundamental Aplikasi Web dengan React" in [Dicoding Academy](https://www.dicoding.com/academies/413/corridor)
 
 ## Built With
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) 
