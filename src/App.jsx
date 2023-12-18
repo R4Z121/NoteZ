@@ -1,158 +1,87 @@
-import React from "react";
-import NoteHeader from "./components/header/NoteHeader";
-import NoteBody from "./components/body/NoteBody";
-import ModalForm from "./components/modal/modal-form/ModalForm";
-import ConfirmModal from "./components/modal/confirm-modal/ConfirmModal";
-import BlockerModal from "./components/modal/BlockerModal";
-import AddButton from "./components/AddButton";
-import { getInitialData } from "./utils/data";
+import React, { createContext, useEffect, useState } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Detail from "./pages/Detail";
+import Register from "./pages/Register";
+import Archived from "./pages/Archived";
+import NewNotes from "./pages/NewNotes";
+import NotFound from "./pages/NotFound";
+import PageHeader from "./components/header/PageHeader";
+import useLocalStorage from "./custom-hooks/useLocalStorage";
+import { getUserLogged, putAccessToken } from "./utils/dataSource";
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentSection: "note",
-      data: [],
-      showedData: [],
-      modalShow: false,
-      addModal: false,
-      deleteModal: false,
-      deleteTargetId: "",
-      confirmationMessage: "",
+export const AppContext = createContext(null);
+
+export default function App () {
+  const navigate = useNavigate();
+  const [authedUser, setAuthedUser] = useState(null);
+  const [intializing, setInitializing] = useState(true);
+  const [lang, setLang] = useLocalStorage("app-lang", "id", "en");
+  const [theme, setTheme] = useLocalStorage("app-theme", "light", "dark");
+  
+  const contextValue = { theme, lang }
+
+  useEffect(() => {
+    async function checkIfUserLoggedIn () {
+      document.documentElement.setAttribute("class", theme);
+      document.documentElement.setAttribute("lang", lang);
+      const { data } = await getUserLogged();
+      setAuthedUser(data);
+      setInitializing(false);
     }
+    checkIfUserLoggedIn();
+  },[]);
 
-    this.toggleAddModal = this.toggleAddModal.bind(this);
-    this.insertNoteHandler = this.insertNoteHandler.bind(this);
-    this.deleteNoteHandler = this.deleteNoteHandler.bind(this);
-    this.toggleArchivedNoteHandler = this.toggleArchivedNoteHandler.bind(this);
-    this.changeFolderHandler = this.changeFolderHandler.bind(this);
-    this.searchHandler = this.searchHandler.bind(this);
-    this.showDeleteModal = this.showDeleteModal.bind(this);
-    this.closeDeleteModal = this.closeDeleteModal.bind(this);
+
+  const onLoginSuccess = async ({ accessToken }) => {
+    putAccessToken(accessToken);
+    const { data } = await getUserLogged();
+    setAuthedUser(data);
   }
 
-  componentDidMount() {
-    const notes = JSON.parse(localStorage.getItem('znotes'));
-    if(notes) {
-      this.setState({
-        data: notes,
-        showedData: notes.filter(note => !note.archived)
-      })
-    } else {
-      localStorage.setItem('znotes',JSON.stringify(getInitialData()));
-    }
+  const toggleTheme = () => {
+    const newTheme = (theme === "light") ? "dark" : "light";
+    document.documentElement.classList.remove(theme);
+    document.documentElement.classList.add(newTheme);
+    setTheme(newTheme);
   }
 
-  toggleAddModal() {
-    this.setState({
-      modalShow: !this.state.modalShow,
-      addModal: !this.state.addModal
-    });
+  const toggleLang = () => {
+    const newLang = (lang === "en") ? "id" : "en";
+    setLang(newLang);
   }
 
-  showDeleteModal(idTarget, titleTarget) {
-    this.setState({
-      modalShow: !this.state.modalShow,
-      deleteModal: !this.state.deleteModal,
-      confirmationMessage: `Anda yakin ingin menghapus "${titleTarget}" ? Catatan yang dihapus akan hilang selamanya !`,
-      deleteTargetId: idTarget
-    });
+  const logOut = () => {
+    putAccessToken("");
+    setAuthedUser(null);
+    navigate("/login");
   }
 
-  closeDeleteModal() {
-    this.setState({
-      modalShow: !this.state.modalShow,
-      deleteModal: !this.state.deleteModal
-    });
-  }
-
-  changeFolderHandler(target) {
-    if(this.state.currentSection === "note") {
-      if(target === "archive") {
-        this.setState({
-          currentSection: "archive",
-          showedData: this.state.data.filter(note => note.archived)
-        })
-      }
-    } else if(this.state.currentSection === "archive") {
-      if(target === "note") {
-        this.setState({
-          currentSection: "note",
-          showedData: this.state.data.filter(note => !note.archived)
-        })
-      }
-    }
-  }
-
-  searchHandler(e) {
-    if(this.state.currentSection === "note") {
-      this.setState({
-        showedData: this.state.data.filter(note => !note.archived).filter(note => note.title.toLowerCase().includes(e.target.value.toLowerCase()))
-      });
-    } else {
-      this.setState({
-        showedData: this.state.data.filter(note => note.archived).filter(note => note.title.toLowerCase().includes(e.target.value.toLowerCase()))
-      })
-    }
-  }
-
-  insertNoteHandler(newData) {
-    const updatedNoteData = [...this.state.data,newData];
-    localStorage.setItem('znotes',JSON.stringify(updatedNoteData));
-    if(this.state.currentSection === "note") {
-      this.setState({
-        data: updatedNoteData,
-        showedData: [...this.state.showedData,newData]
-      })
-    } else {
-      this.setState({
-        data: updatedNoteData,
-      })
-    }
-  }
-
-  deleteNoteHandler(id) {
-    const updatedData = this.state.data.filter(note => (note.id !== id));
-    const updatedShowedData = this.state.showedData.filter(note => (note.id !== id));
-    localStorage.setItem('znotes', JSON.stringify(updatedData));
-    this.setState({
-      data: updatedData,
-      showedData: updatedShowedData
-    })
-    this.closeDeleteModal();
-  }
-
-  toggleArchivedNoteHandler(id) {
-    const updatedNoteData = this.state.data.map(note => {
-      if(note.id === id) {
-        note.archived = !note.archived
-      }
-      return note;
-    });
-
-    localStorage.setItem('znotes',JSON.stringify(updatedNoteData));
-    
-    this.setState({
-      data: updatedNoteData,
-      showedData: this.state.showedData.filter(note => (note.id !== id))
-    })
-  }
-
-  render() {
-    return (
-      <div className="flex flex-col min-h-screen justify-between gap-7 bg-thick-white">
+  return intializing ? (<></>) : (
+    <AppContext.Provider value={ contextValue }>
+      <div className="flex flex-col min-h-screen justify-between gap-7 bg-thick-white dark:bg-app-dark-purple transition-colors">
         <div className="flex flex-col relative">
-          <NoteHeader changeFolderHandler={this.changeFolderHandler} searchHandler={this.searchHandler} />
-          <NoteBody data={this.state.showedData} deleteHandler={this.showDeleteModal} archivedNoteHandler={this.toggleArchivedNoteHandler} />
-          <BlockerModal show={this.state.modalShow} />
-          <ModalForm show={this.state.addModal} closeModalHandler={this.toggleAddModal} dataStateHandler={this.insertNoteHandler} />
-          <ConfirmModal show={this.state.deleteModal} closeModalHandler={this.closeDeleteModal} confirmationMessage={this.state.confirmationMessage} confirmHandler={() => this.deleteNoteHandler(this.state.deleteTargetId)} />
-          <AddButton actionHandler={this.toggleAddModal} />
+          <PageHeader
+            themeHandler={ toggleTheme }
+            logoutHandler={ logOut }
+            authedUser={ authedUser }
+            langHandler={ toggleLang } 
+          />
+          <Routes>
+            <Route path="/login" element={ authedUser ? (<Navigate to="/" />) : (<Login loginHandler={ onLoginSuccess } />) } />
+            <Route path="/register" element={ authedUser ? (<Navigate to="/" />) : (<Register />) } />
+            <Route path="/" element={ authedUser ? (<Home />) : (<Navigate to="/login" />) } />
+            <Route path="/archived" element={ authedUser ? (<Archived />) : (<Navigate to="/login" />) } />
+            <Route path="/detail/:noteId" element={ authedUser ? (<Detail />) : (<Navigate to="/login" />) } />
+            <Route path="/new" element={ authedUser ? (<NewNotes />) : (<Navigate to="/login" />) } />
+            <Route path="/:any" element={ <NotFound /> } />
+          </Routes>
         </div>
         <footer className="flex justify-center items-center p-2">
-          <h4 className="text-base font-bold">Powered by R4Z121.</h4>
+          <h4 className="text-base font-bold dark:text-white">Powered by R4Z121.</h4>
         </footer>
       </div>
-    );
-  }
+    </AppContext.Provider>
+  )
 }

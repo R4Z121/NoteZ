@@ -1,11 +1,18 @@
-import NoteHeaderNav from "./NoteHeaderNav"
-import SearchBar from "./searchBar"
+import PropTypes from "prop-types";
+import SearchBar from "./SearchBar";
 
-export default function NoteHeader({changeFolderHandler, searchHandler}) {
+export default function NoteHeader({ searchHandler, searchValue }) {
   return (
     <div className="flex flex-col gap-2 relative">
-      <NoteHeaderNav changeFolderHandler={changeFolderHandler} />
-      <SearchBar searchHandler={searchHandler} />
+      <SearchBar 
+        searchHandler={ searchHandler } 
+        searchValue={ searchValue } 
+      />
     </div>
   )
+}
+
+NoteHeader.propTypes = {
+  searchHandler: PropTypes.func.isRequired,
+  searchValue: PropTypes.string.isRequired
 }
